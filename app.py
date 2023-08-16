@@ -2,6 +2,8 @@ from shiny import *
 import time
 import sys
 from pathlib import Path
+from typing import List
+from shiny.types import NavSetArg
 
 # Helper functions
 def min_to_sec(minutes):
@@ -9,7 +11,6 @@ def min_to_sec(minutes):
 
 def get_current_date():
     curr_date = time.strftime("%a - %b %d, %Y", time.localtime())
-    # replace comma with a dash
     return curr_date
 
 def fmt_seconds(time_in_seconds):
@@ -19,28 +20,69 @@ def fmt_seconds(time_in_seconds):
 # Declare paths to static assets
 css_file = Path(__file__).parent / "www" / "styles.css"
 
+long_break_image = "https://thumbs.gfycat.com/BriskLankyCopperhead-size_restricted.gif"
+pomo_image = "https://cdn.dribbble.com/users/1341046/screenshots/3993533/media/d5d7198e3cd99068106a19679b4d7ee5.gif"
+short_break_image = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExemt1NmJnZGRsNGRvYmY5NThld2N1dzJpYWdudGQwazFzN2UxdTR6NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MfeD9WGuYxVUk/giphy.gif"
+
+# Declare navbar for app
+
+def nav_controls(prefix: str) -> List[NavSetArg]:
+    return [
+        ui.nav("timer",
+               ui.div(
+                   ui.input_action_button("pomo", "pomo", class_="btn-red"),
+                   ui.input_action_button(
+                       "short_break", "short break", class_="btn-purple"),
+                   ui.input_action_button(
+                       "long_break", "long break", class_="btn-blue"),
+                   class_="time-btns",
+               ),
+               ui.h6(ui.output_text("current_date")),
+               ui.h2(ui.output_text("time_left")),
+               ui.br(),
+               ui.div(
+                   ui.input_action_button(
+                       "start", "start/stop", class_="btn-primary"),
+                   ui.input_action_button(
+                       "reset", "reset", class_="btn-warning"),
+                   class_="main-btns",
+               ),
+               ui.br(),
+        ),
+        ui.nav("settings",
+               ui.div(
+                   ui.input_checkbox("include_images", "include gifs", value=False),
+                   ui.input_numeric(
+                        "pomo_length", "pomo (min)", 
+                        value=25,
+                        width='45%'),
+                   ui.input_numeric(
+                        "short_break_length",
+                        "short break (min)", 
+                        value=5,
+                        width='45%'),
+                   ui.input_numeric(
+                       "long_break_length", 
+                       "long break (min)", 
+                       value=10,
+                       width='45%'),
+                   class_="settings",
+               ),
+        ),
+        ui.nav_control(
+            ui.a(
+                "github",
+                href="https://github.com/parmsam/pomotimer-py",
+                target="_blank",
+            )
+        ),
+    ]
+
 # Define the app 
 app_ui = ui.page_fluid(
     ui.include_css(css_file),
-    ui.h1("Pomotimer-py 🍅", class_ = "main_title"),
-    ui.br(),
-    ui.div(
-        ui.input_action_button("pomo", "Pomo", class_="btn-red"),
-        ui.input_action_button(
-            "short_break", "Short Break", class_="btn-purple"),
-        ui.input_action_button("long_break", "Long Break", class_="btn-blue"),
-        class_ = "time-btns",
-    ),
-    ui.h6(ui.output_text("current_date")),
-    ui.h2(ui.output_text("time_left")),
-    ui.br(),
-    ui.div(
-        ui.input_action_button("start", "Start/Stop", class_="btn-primary"),
-        ui.input_action_button(
-            "reset", "Reset", class_="btn-warning"),
-        class_ = "main-btns",
-    ),
-    ui.br(),
+    ui.h1("pomotimer-py 🍅", class_ = "main_title"),
+    ui.navset_pill_card(*nav_controls("_")),
 )
 
 def server(input, output, session):
@@ -70,23 +112,57 @@ def server(input, output, session):
     @reactive.Effect
     @reactive.event(input.pomo)
     def set_pomo_reg():
-        remaining_time.set(25*60)
+        remaining_time.set(input.pomo_length()*60)
+        if(input.include_images()):
+            ui.remove_ui(selector="div.running_img")
+            ui.insert_ui(
+                ui.div(
+                    ui.br(),
+                    ui.img(src = pomo_image),
+                    class_="running_img",
+                ),
+                selector="#reset",
+                where="afterEnd",
+            )
 
     @reactive.Effect
     @reactive.event(input.short_break)
     def set_pomo_short():
-        remaining_time.set(int(5*60))
+        remaining_time.set(int(input.short_break_length()*60))
+        if(input.include_images()):
+            ui.remove_ui(selector="div.running_img")
+            ui.insert_ui(
+                ui.div(
+                    ui.br(),
+                    ui.img(src=short_break_image),
+                    class_="running_img",
+                ),
+                selector="#reset",
+                where="afterEnd",
+            )
 
     @reactive.Effect
     @reactive.event(input.long_break)
     def set_pomo_long():
-        remaining_time.set(10*60)
+        remaining_time.set(input.long_break_length()*60)
+        if(input.include_images()):
+            ui.remove_ui(selector="div.running_img")
+            ui.insert_ui(
+                ui.div(
+                    ui.br(),
+                    ui.img(src=long_break_image),
+                    class_="running_img",
+                ),
+                selector="#reset",
+                where="afterEnd",
+            )
 
     # Reset the timer
     @reactive.Effect
     @reactive.event(input.reset)
     def reset_stop_time():
         remaining_time.set(0)
+        ui.remove_ui(selector="div.running_img")
 
     # Start/stop the timer
     @reactive.Effect
