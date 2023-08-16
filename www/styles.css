@@ -1,0 +1,52 @@
+#current_date{
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+}
+
+/*large timer font*/
+#time_left{
+    font-size: 50px;
+    font-weight: bold;
+    color: darkred;
+}
+
+.btn {
+    border-radius: 50px;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px;
+}
+
+/* .btn-red {
+    background-color: darkred;
+    color: white;
+    border-color: darkred;
+} */
+
+/* .btn-lightred {
+    background-color: lightcoral;
+    color: white;
+    border-color: lightcoral;
+    color: black;
+} */
+
+/* .btn-purple {
+    background-color: lightsalmon;
+    color: white;
+    border-color: lightsalmon;
+} */
+
+/* .btn-blue {
+    background-color: lightslategrey;
+    color: white;
+    border-color: lightslategrey;
+} */
+
+.btn-green {
+    background-color: darkgreen;
+    color: white;
+    border-color: darkgreen;
+}
