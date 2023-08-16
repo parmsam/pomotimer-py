@@ -1,7 +1,7 @@
 
 # pomotimer-py
 
-A simple pomodoro timer written in Python for Shiny.
+A simple pomodoro timer written in Shiny for Python.
 
 # app link
 
