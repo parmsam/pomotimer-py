@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from typing import List
 from shiny.types import NavSetArg
+# import htmltools
 
 # Helper functions
 def min_to_sec(minutes):
@@ -19,13 +20,17 @@ def fmt_seconds(time_in_seconds):
 
 # Declare paths to static assets
 css_file = Path(__file__).parent / "www" / "styles.css"
+js_file = Path(__file__).parent / "www" / "script.js"
 
 long_break_image = "https://thumbs.gfycat.com/BriskLankyCopperhead-size_restricted.gif"
 pomo_image = "https://cdn.dribbble.com/users/1341046/screenshots/3993533/media/d5d7198e3cd99068106a19679b4d7ee5.gif"
 short_break_image = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExemt1NmJnZGRsNGRvYmY5NThld2N1dzJpYWdudGQwazFzN2UxdTR6NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MfeD9WGuYxVUk/giphy.gif"
 
-# Declare navbar for app
+app_link = "https://github.com/parmsam/pomotimer-py",
 
+mp3_link = "https://github.com/JanLoebel/MMM-TouchAlarm/blob/master/sounds/alarm.mp3?raw=true"
+
+# Declare navbar for app
 def nav_controls(prefix: str) -> List[NavSetArg]:
     return [
         ui.nav("timer",
@@ -72,15 +77,16 @@ def nav_controls(prefix: str) -> List[NavSetArg]:
         ui.nav_control(
             ui.a(
                 "github",
-                href="https://github.com/parmsam/pomotimer-py",
+                href= str(app_link),
                 target="_blank",
-            )
+            ),
         ),
     ]
 
 # Define the app 
 app_ui = ui.page_fluid(
-    ui.include_css(css_file),
+    ui.include_js(str(js_file)),
+    ui.include_css(str(css_file)),
     ui.h1("pomotimer-py 🍅", class_ = "main_title"),
     ui.navset_pill_card(*nav_controls("_")),
 )
@@ -183,6 +189,7 @@ def server(input, output, session):
         if (remaining_time.get()) > 0:
             return fmt_seconds(remaining_time.get())
         remaining_time.set(0)
+
         return "Time's up!"
     
     # Update the current date
@@ -193,4 +200,3 @@ def server(input, output, session):
 
 
 app = App(app_ui, server, debug=False)
-
