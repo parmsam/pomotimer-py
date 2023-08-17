@@ -28,8 +28,6 @@ short_break_image = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExemt1NmJnZ
 
 app_link = "https://github.com/parmsam/pomotimer-py",
 
-mp3_link = "https://github.com/JanLoebel/MMM-TouchAlarm/blob/master/sounds/alarm.mp3?raw=true"
-
 # Declare navbar for app
 def nav_controls(prefix: str) -> List[NavSetArg]:
     return [
@@ -56,7 +54,8 @@ def nav_controls(prefix: str) -> List[NavSetArg]:
         ),
         ui.nav("settings",
                ui.div(
-                   ui.input_checkbox("include_images", "include gifs", value=False),
+                   ui.input_checkbox("include_images", "include gifs", 
+                                     value=False),
                    ui.input_numeric(
                         "pomo_length", "pomo (min)", 
                         value=25,
@@ -85,8 +84,8 @@ def nav_controls(prefix: str) -> List[NavSetArg]:
 
 # Define the app 
 app_ui = ui.page_fluid(
-    ui.include_js(str(js_file)),
-    ui.include_css(str(css_file)),
+    ui.include_js(str(js_file), method = "link_files"),
+    ui.include_css(str(css_file), method = "link_files"),
     ui.h1("pomotimer-py 🍅", class_ = "main_title"),
     ui.navset_pill_card(*nav_controls("_")),
 )
