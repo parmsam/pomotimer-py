@@ -26,7 +26,7 @@ long_break_image = "https://thumbs.gfycat.com/BriskLankyCopperhead-size_restrict
 pomo_image = "https://cdn.dribbble.com/users/1341046/screenshots/3993533/media/d5d7198e3cd99068106a19679b4d7ee5.gif"
 short_break_image = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExemt1NmJnZGRsNGRvYmY5NThld2N1dzJpYWdudGQwazFzN2UxdTR6NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MfeD9WGuYxVUk/giphy.gif"
 
-app_link = "https://github.com/parmsam/pomotimer-py",
+app_link = "https://github.com/parmsam/pomotimer-py"
 
 # Declare navbar for app
 def nav_controls(prefix: str) -> List[NavSetArg]:
@@ -76,7 +76,7 @@ def nav_controls(prefix: str) -> List[NavSetArg]:
         ui.nav_control(
             ui.a(
                 "github",
-                href= str(app_link),
+                href= app_link,
                 target="_blank",
             ),
         ),
